@@ -108,7 +108,7 @@ def main():
 
         st.divider()
 
-        input_query = st.text_input("Enter your question:")
+        input_query = st.text_input("Ask ChatGPT about data:")
         st.session_state.input_query = input_query
 
         if st.button("Run query"):
@@ -117,7 +117,9 @@ def main():
 
         st.divider()
 
-        display_chat_history()  
+        display_chat_history()
+    else:
+        st.info("Please upload dataset (.csv file) first.")
 
 if __name__ == '__main__':
     main()
