@@ -16,12 +16,6 @@ load_dotenv()
 
 MODEL_NAME = "gpt-3.5-turbo"
 
-project_path = os.getcwd()
-
-# Set the relative path to the data file
-data_path = Path(__file__).parent.parent / 'data' / 'raw' / 'sales-data-sample.csv'
-print(data_path)
-
 # Cấu hình logger ghi vào file
 logging.basicConfig(filename='app.log', 
     level=logging.DEBUG, 
@@ -89,7 +83,7 @@ def main():
         st.write("We already have a sample data.")
         st.write("Do you want a test?")
         if st.button('Load sample data'):
-            st.session_state.df = pd.read_csv(data_path)
+            st.session_state.df = pd.read_csv('src/data/sales-data-sample.csv')
 
     if st.session_state.uploaded_file is not None:
         st.session_state.df = pd.read_csv(st.session_state.uploaded_file)
