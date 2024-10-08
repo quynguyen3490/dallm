@@ -10,7 +10,7 @@ def load_llm(model_name):
         return ChatOpenAI(
             model=model_name,
             temperature=0,
-            max_tokens=100
+            max_tokens=1000,
             api_key=OPENAI_API_KEY
         )
     else:
