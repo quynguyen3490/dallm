@@ -119,7 +119,7 @@ def main():
         if 'input_query' not in st.session_state:
             st.session_state.input_query = ""
 
-        input_query = st.text_input("Ask ChatGPT about data:")
+        input_query = st.text_input("Ask AI about data:")
         st.session_state.input_query = input_query
         st.write('*(You can ask something like: best category sale? or plot the sales by Segment?)*')
 
