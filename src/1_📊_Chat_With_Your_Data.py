@@ -15,6 +15,8 @@ load_dotenv()
 
 MODEL_NAME = "gpt-3.5-turbo"
 
+project_path = os.getcwd()
+
 # Cấu hình logger ghi vào file
 logging.basicConfig(filename='app.log', 
     level=logging.DEBUG, 
@@ -76,6 +78,13 @@ def main():
     with st.sidebar:
         uploaded_file = st.file_uploader("Upload your csv file here", type="csv")
         st.session_state.uploaded_file = uploaded_file
+    
+    with st.sidebar:
+        st.divider()
+        st.write("We already have a sample data.")
+        st.write("Do you want a test?")
+        if st.button('Load sample data'):
+            st.session_state.df = pd.read_csv(os.path.join(project_path,'data','raw','sales-data-sample.csv'))
 
     if st.session_state.uploaded_file is not None:
         st.session_state.df = pd.read_csv(st.session_state.uploaded_file)
@@ -95,18 +104,21 @@ def main():
             return_intermediate_steps=True
         )
 
+        toggle_py = st.toggle('Python')
+        
+        if toggle_py:
+            pycode = st.text_area("Enter python code here:")
+            st.session_state.pycode = pycode
+            st.write('*(You need set a "output" for text and "chart" var for plots.)*')
+
+            if st.button("Execute Python"):
+                with st.spinner("Processing..."):
+                    process_query(None, pycode)
+
+            st.divider()
+
         if 'input_query' not in st.session_state:
             st.session_state.input_query = ""
-
-        pycode = st.text_area("Enter python code here:")
-        st.session_state.pycode = pycode
-        st.write('*(You need set a "output" for text and "chart" var for plots.)*')
-
-        if st.button("Execute Python"):
-            with st.spinner("Processing..."):
-                process_query(None, pycode)
-
-        st.divider()
 
         input_query = st.text_input("Ask ChatGPT about data:")
         st.session_state.input_query = input_query
