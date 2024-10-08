@@ -9,11 +9,11 @@ import os
 from dotenv import load_dotenv
 
 from models.llms import load_llm
-from utils import execute_plt_code
+from utils import execute_plt_code, execute_py_code
 
 load_dotenv()
 
-MODEL_NAME = 'gpt-3.5-turbo'
+MODEL_NAME = "gpt-3.5-turbo"
 
 # Cấu hình logger ghi vào file
 logging.basicConfig(filename='app.log', 
@@ -28,28 +28,32 @@ def display_chat_history():
         st.markdown("---")
 
 def process_query(agent, query):
-    response = agent.invoke(query)
-    action = response['intermediate_steps'][0][0].tool_input['query']
+    if agent is not None:
+        response = agent.invoke(query)
+        action = response['intermediate_steps'][0][0].tool_input['query']
+    
+        if "plt" in action:
+            st.write(response['output'])
 
-    if "plt" in action:
-        st.write(response['output'])
+            fig = execute_plt_code(action, df=st.session_state.df)
+            if fig:
+                st.pyplot(fig)
+            
+            to_display_string = response['output'] + "\n" + f"```python\n{action}\n```"
+            st.session_state.history.append((query, to_display_string))
+            st.write("**Execute codes:**")
+            st.code(action)
 
-        fig = execute_plt_code(action, df=st.session_state.df)
-        if fig:
-            st.pyplot(fig)
-        
-        to_display_string = response['output'] + "\n" + f"```python\n{action}\n```"
-        st.session_state.history.append((query, to_display_string))
-        st.write("**Execute codes:**")
-        st.code(action)
+        else:
+            st.write(response['output'])
+            to_display_string = response['output'] + "\n" + f"```python\n{action}\n```"
+            st.session_state.history.append((query, to_display_string))
 
+            st.write("**Execute codes:**")
+            st.code(action)
     else:
-        st.write(response['output'])
-        to_display_string = response['output'] + "\n" + f"```python\n{action}\n```"
-        st.session_state.history.append((query, to_display_string))
+        execute_py_code(code=query,df=st.session_state.df)
 
-        st.write("**Execute codes:**")
-        st.code(action)
 
 def main():
     # Load llm
@@ -77,9 +81,9 @@ def main():
         st.session_state.df = pd.read_csv(st.session_state.uploaded_file)
     
     if st.session_state.df is not None:
-        st.dataframe(st.session_state.df.head(10))
-
         st.write("#### Your data here:")
+
+        st.dataframe(st.session_state.df.head(10))
 
         # Create data agent
         da_agent = create_pandas_dataframe_agent(
@@ -94,6 +98,16 @@ def main():
         if 'input_query' not in st.session_state:
             st.session_state.input_query = ""
 
+        pycode = st.text_area("Enter python code here:")
+        st.session_state.pycode = pycode
+        st.write('*(You need set a "output" for text and "chart" var for plots.)*')
+
+        if st.button("Execute Python"):
+            with st.spinner("Processing..."):
+                process_query(None, pycode)
+
+        st.divider()
+
         input_query = st.text_input("Enter your question:")
         st.session_state.input_query = input_query
 
@@ -103,18 +117,7 @@ def main():
 
         st.divider()
 
-        display_chat_history()
-
-        # st.write("Shape:")
-        # st.write(st.session_state.df.shape)
-        # st.write("Columns:")
-        # st.write(st.session_state.df.columns)
-        # st.write("Describe data:")
-        # st.write(st.session_state.df.describe())
-
-        # fig, ax = plt.subplots()
-        # ax.hist(x=st.session_state.df['ShipStatus'])
-        # st.pyplot(fig)    
+        display_chat_history()  
 
 if __name__ == '__main__':
     main()
