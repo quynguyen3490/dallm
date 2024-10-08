@@ -6,9 +6,13 @@
 
 ## Smart Data Analyze Tool
 
-With ChatGPT 3.5 Turbo Model, you can ask any question about your data by natual languague.
+With ChatGPT 3.5 Turbo Model, you can ask any question about your data by natual languague or you can free analyze by python code.
+
+You can also visualize data by a visualization tool (like Tableau or PowerBI)
 
 This app has deployed on Streamlit Sharing in <a href="https://datallms.streamlit.app/">link</a>
+
+Have fun with data :)
 
 ## Project Organization
 
