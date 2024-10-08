@@ -4,7 +4,11 @@
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
 
-A short description of the project.
+## Smart Data Analyze Tool
+
+With ChatGPT 3.5 Turbo Model, you can ask any question about your data by natual languague.
+
+This app has deployed on Streamlit Sharing in <a href="https://datallms.streamlit.app/">link</a>
 
 ## Project Organization
 
