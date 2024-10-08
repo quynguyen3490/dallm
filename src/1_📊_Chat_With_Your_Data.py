@@ -121,6 +121,7 @@ def main():
 
         input_query = st.text_input("Ask ChatGPT about data:")
         st.session_state.input_query = input_query
+        st.write('*(You can ask something like: best category sale? or plot the sales by Segment?)*')
 
         if st.button("Run query"):
             with st.spinner("Processing..."):
