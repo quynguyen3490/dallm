@@ -10,3 +10,10 @@ typer
 pandas
 numpy
 seaborn
+langchain
+langchain-community
+langchain-openai
+langchain_experimental
+streamlit
+pygwalker
+tabulate
